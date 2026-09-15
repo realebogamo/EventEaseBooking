@@ -1,0 +1,40 @@
+@model IEnumerable<Booking>
+@{
+    ViewData["Title"] = "Bookings";
+}
+
+<h1>Bookings</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Booking</a>
+</p>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>Event</th>
+            <th>Venue</th>
+            <th>Event Dates</th>
+            <th>Booked On</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var booking in Model)
+{
+        <tr>
+            <td>@booking.BookingId</td>
+            <td>@booking.Event?.EventName</td>
+            <td>@booking.Venue?.VenueName</td>
+            <td>@booking.Event?.EventStartDate.ToString("d") - @booking.Event?.EventEndDate.ToString("d")</td>
+            <td>@booking.BookingDate.ToString("g")</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@booking.BookingId" class="btn btn-sm btn-outline-secondary">Details</a>
+                <a asp-action="Edit" asp-route-id="@booking.BookingId" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a asp-action="Delete" asp-route-id="@booking.BookingId" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

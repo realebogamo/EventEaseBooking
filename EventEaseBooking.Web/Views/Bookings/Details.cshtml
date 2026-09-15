@@ -1,0 +1,26 @@
+@model Booking
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<h1>Booking Details</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Booking ID</dt>
+            <dd class="col-sm-8">@Model.BookingId</dd>
+            <dt class="col-sm-4">Event</dt>
+            <dd class="col-sm-8">@Model.Event?.EventName</dd>
+            <dt class="col-sm-4">Venue</dt>
+            <dd class="col-sm-8">@Model.Venue?.VenueName</dd>
+            <dt class="col-sm-4">Event Dates</dt>
+            <dd class="col-sm-8">@Model.Event?.EventStartDate.ToString("d") - @Model.Event?.EventEndDate.ToString("d")</dd>
+            <dt class="col-sm-4">Booked On</dt>
+            <dd class="col-sm-8">@Model.BookingDate.ToString("g")</dd>
+        </dl>
+    </div>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.BookingId" class="btn btn-primary">Edit</a>
+<a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>

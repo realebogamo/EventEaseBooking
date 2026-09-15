@@ -1,0 +1,29 @@
+@model Venue
+@{
+    ViewData["Title"] = "Delete Venue";
+}
+
+<h1>Delete Venue</h1>
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<p>Are you sure you want to delete this venue?</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.VenueName)</dt>
+            <dd class="col-sm-9">@Model.VenueName</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Location)</dt>
+            <dd class="col-sm-9">@Model.Location</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Capacity)</dt>
+            <dd class="col-sm-9">@Model.Capacity</dd>
+        </dl>
+    </div>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="VenueId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>

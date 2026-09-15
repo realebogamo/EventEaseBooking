@@ -1,0 +1,43 @@
+@model IEnumerable<Venue>
+@{
+    ViewData["Title"] = "Venues";
+}
+
+<h1>Venues</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Venue</a>
+</p>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>@Html.DisplayNameFor(m => m.VenueName)</th>
+            <th>@Html.DisplayNameFor(m => m.Location)</th>
+            <th>@Html.DisplayNameFor(m => m.Capacity)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var venue in Model)
+{
+        <tr>
+            <td style="width:100px">
+                @if (!string.IsNullOrWhiteSpace(venue.ImageUrl))
+                {
+                    <img src="@venue.ImageUrl" alt="@venue.VenueName" class="img-thumbnail" style="max-width:80px" />
+                }
+            </td>
+            <td>@venue.VenueName</td>
+            <td>@venue.Location</td>
+            <td>@venue.Capacity</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@venue.VenueId" class="btn btn-sm btn-outline-secondary">Details</a>
+                <a asp-action="Edit" asp-route-id="@venue.VenueId" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a asp-action="Delete" asp-route-id="@venue.VenueId" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

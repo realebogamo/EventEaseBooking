@@ -1,0 +1,24 @@
+@model Event
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<h1>Event Details</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.EventName)</dt>
+            <dd class="col-sm-9">@Model.EventName</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.EventStartDate)</dt>
+            <dd class="col-sm-9">@Model.EventStartDate.ToString("d")</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.EventEndDate)</dt>
+            <dd class="col-sm-9">@Model.EventEndDate.ToString("d")</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Description)</dt>
+            <dd class="col-sm-9">@Model.Description</dd>
+        </dl>
+    </div>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.EventId" class="btn btn-primary">Edit</a>
+<a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>

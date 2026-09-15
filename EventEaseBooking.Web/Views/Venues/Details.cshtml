@@ -1,0 +1,26 @@
+@model Venue
+@{
+    ViewData["Title"] = "Venue Details";
+}
+
+<h1>Venue Details</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="@Model.VenueName" class="img-fluid mb-3" />
+        }
+        <dl class="row">
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.VenueName)</dt>
+            <dd class="col-sm-9">@Model.VenueName</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Location)</dt>
+            <dd class="col-sm-9">@Model.Location</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Capacity)</dt>
+            <dd class="col-sm-9">@Model.Capacity</dd>
+        </dl>
+    </div>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.VenueId" class="btn btn-primary">Edit</a>
+<a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
