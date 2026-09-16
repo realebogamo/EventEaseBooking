@@ -1,13 +1,29 @@
 @model Venue
 @{
     ViewData["Title"] = "Delete Venue";
+    var blockingBookings = ViewBag.BlockingBookings as IEnumerable<Booking> ?? Enumerable.Empty<Booking>();
 }
 
 <h1>Delete Venue</h1>
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<p>Are you sure you want to delete this venue?</p>
+@if (blockingBookings.Any())
+{
+    <div class="alert alert-danger">
+        <p class="mb-2"><strong>This venue cannot be deleted.</strong> It has @blockingBookings.Count() active booking(s):</p>
+        <ul class="mb-0">
+            @foreach (var b in blockingBookings)
+            {
+                <li>@b.Event?.EventName (@b.Event?.EventStartDate.ToString("d") - @b.Event?.EventEndDate.ToString("d"))</li>
+            }
+        </ul>
+    </div>
+}
+else
+{
+    <p>Are you sure you want to delete this venue?</p>
+}
 
 <div class="row">
     <div class="col-md-6">
@@ -24,6 +40,6 @@
 
 <form asp-action="Delete" method="post">
     <input type="hidden" asp-for="VenueId" />
-    <button type="submit" class="btn btn-danger">Delete</button>
+    <button type="submit" class="btn btn-danger" disabled="@(blockingBookings.Any() ? "disabled" : null)">Delete</button>
     <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
 </form>

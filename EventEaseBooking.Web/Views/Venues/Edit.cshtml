@@ -5,9 +5,14 @@
 
 <h1>Edit Venue</h1>
 
+@if (TempData["ImageUploadError"] is string imageUploadError)
+{
+    <div class="alert alert-warning">@imageUploadError</div>
+}
+
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Edit" method="post">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="VenueId" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
@@ -25,10 +30,17 @@
                 <input asp-for="Capacity" class="form-control" />
                 <span asp-validation-for="Capacity" class="text-danger"></span>
             </div>
+            @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+            {
+                <div class="mb-3">
+                    <label class="form-label d-block">Current image</label>
+                    <img src="@Model.ImageUrl" alt="@Model.VenueName" class="img-thumbnail" style="max-width:200px" />
+                </div>
+            }
             <div class="mb-3">
-                <label asp-for="ImageUrl" class="form-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label for="imageFile" class="form-label">Replace image</label>
+                <input type="file" id="imageFile" name="imageFile" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+                <div class="form-text">JPG, PNG or WEBP, up to 5 MB. Leave blank to keep the current image.</div>
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
             <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>

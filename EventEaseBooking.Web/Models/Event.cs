@@ -23,6 +23,18 @@ public class Event : IValidatableObject
     [StringLength(1000)]
     public string? Description { get; set; }
 
+    // Part 3: nullable so existing/new events can stay uncategorised, and so
+    // deleting an EventType (ON DELETE SET NULL) never blocks or cascades.
+    [Display(Name = "Event Type")]
+    public int? EventTypeId { get; set; }
+    public EventType? EventType { get; set; }
+
+    // Part 2: real Blob Storage URL, set by BlobStorageService after upload —
+    // never bound directly from a form post (see EventsController).
+    [StringLength(500)]
+    [Display(Name = "Image URL")]
+    public string? ImageUrl { get; set; }
+
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

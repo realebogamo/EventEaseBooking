@@ -1,4 +1,4 @@
-@model IEnumerable<Event>
+@model EventFilterViewModel
 @{
     ViewData["Title"] = "Events";
 }
@@ -9,27 +9,75 @@
     <a asp-action="Create" class="btn btn-primary">Create New Event</a>
 </p>
 
+<form asp-action="Index" method="get" class="row g-3 mb-4 border rounded p-3">
+    <div class="col-md-3">
+        <label asp-for="EventTypeId" class="form-label"></label>
+        <select asp-for="EventTypeId" asp-items="Model.EventTypes" class="form-select">
+            <option value="">All types</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="VenueId" class="form-label"></label>
+        <select asp-for="VenueId" asp-items="Model.Venues" class="form-select">
+            <option value="">All venues</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="StartDate" class="form-label"></label>
+        <input asp-for="StartDate" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label asp-for="EndDate" class="form-label"></label>
+        <input asp-for="EndDate" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label asp-for="Availability" class="form-label"></label>
+        <select asp-for="Availability" asp-items="Html.GetEnumSelectList<EventAvailability>()" class="form-select"></select>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-outline-primary">Apply filters</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+    </div>
+</form>
+
 <table class="table table-striped align-middle">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(m => m.EventName)</th>
-            <th>@Html.DisplayNameFor(m => m.EventStartDate)</th>
-            <th>@Html.DisplayNameFor(m => m.EventEndDate)</th>
+            <th>Image</th>
+            <th>Event Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Type</th>
+            <th>Venue</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var evt in Model)
+@foreach (var evt in Model.Results)
 {
         <tr>
+            <td style="width:100px">
+                @if (!string.IsNullOrWhiteSpace(evt.ImageUrl))
+                {
+                    <img src="@evt.ImageUrl" alt="@evt.EventName" class="img-thumbnail" style="max-width:80px" />
+                }
+            </td>
             <td>@evt.EventName</td>
             <td>@evt.EventStartDate.ToString("d")</td>
             <td>@evt.EventEndDate.ToString("d")</td>
+            <td>@(evt.EventType?.TypeName ?? "—")</td>
+            <td>@(evt.Bookings.Any() ? string.Join(", ", evt.Bookings.Select(b => b.Venue!.VenueName)) : "Needs a venue")</td>
             <td>
                 <a asp-action="Details" asp-route-id="@evt.EventId" class="btn btn-sm btn-outline-secondary">Details</a>
                 <a asp-action="Edit" asp-route-id="@evt.EventId" class="btn btn-sm btn-outline-primary">Edit</a>
                 <a asp-action="Delete" asp-route-id="@evt.EventId" class="btn btn-sm btn-outline-danger">Delete</a>
             </td>
+        </tr>
+}
+@if (!Model.Results.Any())
+{
+        <tr>
+            <td colspan="7" class="text-center text-muted">No events match the selected filters.</td>
         </tr>
 }
     </tbody>

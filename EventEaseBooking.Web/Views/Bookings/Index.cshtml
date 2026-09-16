@@ -1,6 +1,7 @@
-@model IEnumerable<Booking>
+@model BookingFilterViewModel
 @{
     ViewData["Title"] = "Bookings";
+    var today = DateTime.Today;
 }
 
 <h1>Bookings</h1>
@@ -9,10 +10,37 @@
     <a asp-action="Create" class="btn btn-primary">Create New Booking</a>
 </p>
 
+<form asp-action="Index" method="get" class="row g-3 mb-4 border rounded p-3">
+    <div class="col-md-4">
+        <label asp-for="Search" class="form-label"></label>
+        <input asp-for="Search" class="form-control" placeholder="Event or venue name" />
+    </div>
+    <div class="col-md-3">
+        <label asp-for="VenueId" class="form-label"></label>
+        <select asp-for="VenueId" asp-items="Model.Venues" class="form-select">
+            <option value="">All venues</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="StartDate" class="form-label"></label>
+        <input asp-for="StartDate" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label asp-for="EndDate" class="form-label"></label>
+        <input asp-for="EndDate" class="form-control" />
+    </div>
+    <div class="col-md-1 d-flex align-items-end">
+        <button type="submit" class="btn btn-outline-primary">Go</button>
+    </div>
+    <div class="col-12">
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Clear filters</a>
+    </div>
+</form>
+
 <table class="table table-striped align-middle">
     <thead>
         <tr>
-            <th>Booking ID</th>
+            <th>Status</th>
             <th>Event</th>
             <th>Venue</th>
             <th>Event Dates</th>
@@ -21,10 +49,11 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var booking in Model)
+@foreach (var booking in Model.Results)
 {
+        var isPast = booking.Event is not null && booking.Event.EventEndDate < today;
         <tr>
-            <td>@booking.BookingId</td>
+            <td><span class="badge @(isPast ? "bg-secondary" : "bg-success")">@(isPast ? "Past" : "Upcoming")</span></td>
             <td>@booking.Event?.EventName</td>
             <td>@booking.Venue?.VenueName</td>
             <td>@booking.Event?.EventStartDate.ToString("d") - @booking.Event?.EventEndDate.ToString("d")</td>
@@ -34,6 +63,12 @@
                 <a asp-action="Edit" asp-route-id="@booking.BookingId" class="btn btn-sm btn-outline-primary">Edit</a>
                 <a asp-action="Delete" asp-route-id="@booking.BookingId" class="btn btn-sm btn-outline-danger">Delete</a>
             </td>
+        </tr>
+}
+@if (!Model.Results.Any())
+{
+        <tr>
+            <td colspan="6" class="text-center text-muted">No bookings match the selected filters.</td>
         </tr>
 }
     </tbody>

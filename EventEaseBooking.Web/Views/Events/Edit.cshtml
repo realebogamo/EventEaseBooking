@@ -5,9 +5,14 @@
 
 <h1>Edit Event</h1>
 
+@if (TempData["ImageUploadError"] is string imageUploadError)
+{
+    <div class="alert alert-warning">@imageUploadError</div>
+}
+
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Edit" method="post">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="EventId" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
@@ -29,6 +34,25 @@
                 <label asp-for="Description" class="form-label"></label>
                 <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EventTypeId" class="form-label"></label>
+                <select asp-for="EventTypeId" asp-items="ViewBag.EventTypes" class="form-select">
+                    <option value="">-- Select a type (optional) --</option>
+                </select>
+                <span asp-validation-for="EventTypeId" class="text-danger"></span>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+            {
+                <div class="mb-3">
+                    <label class="form-label d-block">Current image</label>
+                    <img src="@Model.ImageUrl" alt="@Model.EventName" class="img-thumbnail" style="max-width:200px" />
+                </div>
+            }
+            <div class="mb-3">
+                <label for="imageFile" class="form-label">Replace image</label>
+                <input type="file" id="imageFile" name="imageFile" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+                <div class="form-text">JPG, PNG or WEBP, up to 5 MB. Leave blank to keep the current image.</div>
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
             <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>

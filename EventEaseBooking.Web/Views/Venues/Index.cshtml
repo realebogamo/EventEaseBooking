@@ -1,4 +1,4 @@
-@model IEnumerable<Venue>
+@model VenueFilterViewModel
 @{
     ViewData["Title"] = "Venues";
 }
@@ -9,18 +9,34 @@
     <a asp-action="Create" class="btn btn-primary">Create New Venue</a>
 </p>
 
+<form asp-action="Index" method="get" class="row g-3 mb-4 border rounded p-3">
+    <div class="col-md-6">
+        <label asp-for="Search" class="form-label"></label>
+        <input asp-for="Search" class="form-control" placeholder="Name or location" />
+    </div>
+    <div class="col-md-3">
+        <label asp-for="MinCapacity" class="form-label"></label>
+        <input asp-for="MinCapacity" class="form-control" />
+        <span asp-validation-for="MinCapacity" class="text-danger"></span>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-outline-primary me-2">Search</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+    </div>
+</form>
+
 <table class="table table-striped align-middle">
     <thead>
         <tr>
             <th>Image</th>
-            <th>@Html.DisplayNameFor(m => m.VenueName)</th>
-            <th>@Html.DisplayNameFor(m => m.Location)</th>
-            <th>@Html.DisplayNameFor(m => m.Capacity)</th>
+            <th>@Html.DisplayNameFor(m => m.Results[0].VenueName)</th>
+            <th>@Html.DisplayNameFor(m => m.Results[0].Location)</th>
+            <th>@Html.DisplayNameFor(m => m.Results[0].Capacity)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var venue in Model)
+@foreach (var venue in Model.Results)
 {
         <tr>
             <td style="width:100px">
@@ -37,6 +53,12 @@
                 <a asp-action="Edit" asp-route-id="@venue.VenueId" class="btn btn-sm btn-outline-primary">Edit</a>
                 <a asp-action="Delete" asp-route-id="@venue.VenueId" class="btn btn-sm btn-outline-danger">Delete</a>
             </td>
+        </tr>
+}
+@if (!Model.Results.Any())
+{
+        <tr>
+            <td colspan="5" class="text-center text-muted">No venues match the selected filters.</td>
         </tr>
 }
     </tbody>

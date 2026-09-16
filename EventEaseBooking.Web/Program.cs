@@ -1,4 +1,5 @@
 using EventEaseBooking.Web.Data;
+using EventEaseBooking.Web.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             maxRetryCount: 5,
             maxRetryDelay: TimeSpan.FromSeconds(10),
             errorNumbersToAdd: null)));
+
+// Singleton: BlobContainerClient is thread-safe and expensive to recreate per
+// request, and the one-time CreateIfNotExists check belongs at startup, not
+// on every image upload.
+builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 
 var app = builder.Build();
 

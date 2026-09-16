@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Create" method="post">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
                 <label asp-for="VenueName" class="form-label"></label>
@@ -25,9 +25,9 @@
                 <span asp-validation-for="Capacity" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="ImageUrl" class="form-label"></label>
-                <input asp-for="ImageUrl" class="form-control" placeholder="Placeholder URL — real uploads arrive in Part 2" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label for="imageFile" class="form-label">Image</label>
+                <input type="file" id="imageFile" name="imageFile" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+                <div class="form-text">JPG, PNG or WEBP, up to 5 MB. Optional.</div>
             </div>
             <button type="submit" class="btn btn-primary">Create</button>
             <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>

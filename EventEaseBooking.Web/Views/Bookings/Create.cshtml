@@ -23,7 +23,7 @@
                 </select>
                 <span asp-validation-for="VenueId" class="text-danger"></span>
             </div>
-            <p class="form-text">Double-booking prevention is enforced from Part 2 onward.</p>
+            <p class="form-text">A venue can't be booked twice for overlapping event dates — this is checked here and enforced in the database.</p>
             <button type="submit" class="btn btn-primary">Create</button>
             <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
         </form>
