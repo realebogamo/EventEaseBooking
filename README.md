@@ -39,9 +39,7 @@ lives in the POE report, summarised here so the code makes sense on its own:
 
 ## Prerequisites
 
-- **.NET 8 SDK** — not currently installed on this machine (only the .NET
-  runtime was found). Install from <https://dotnet.microsoft.com/download/dotnet/8.0>
-  before you can build, run, or use `dotnet ef`.
+- **.NET 8 SDK** — <https://dotnet.microsoft.com/download/dotnet/8.0>
 - SQL Server (LocalDB, SQL Server Express, or a reachable Azure SQL Database)
 - (Part 2+) An Azure Storage account for Blob Storage
 
@@ -69,6 +67,15 @@ migrations.
 ships with an empty `ConnectionStrings:DefaultConnection` on purpose — use
 `dotnet user-secrets` locally and Azure App Service Application Settings in
 the cloud.
+
+### Azure SQL connection resiliency
+
+`Program.cs` enables EF Core's `EnableRetryOnFailure()` on the SQL Server
+provider. Azure SQL Database (especially the Basic tier used for this
+project) can be slow to respond on the first connection after being idle,
+which otherwise surfaces as a `SqlException: Connection Timeout Expired`
+on the very first request after a period of inactivity. If you still hit
+timeouts, raise `Connect Timeout` in your connection string (e.g. to 60).
 
 ## Project structure
 
