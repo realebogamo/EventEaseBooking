@@ -15,12 +15,12 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<Venue>(entity =>
         {
-            entity.ToTable(t => t.HasCheckConstraint("CK_Venue_Capacity", "[Capacity] > 0"));
+            entity.ToTable("Venue", t => t.HasCheckConstraint("CK_Venue_Capacity", "[Capacity] > 0"));
         });
 
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.ToTable(t => t.HasCheckConstraint("CK_Event_DateRange", "[EventEndDate] >= [EventStartDate]"));
+            entity.ToTable("Event", t => t.HasCheckConstraint("CK_Event_DateRange", "[EventEndDate] >= [EventStartDate]"));
             entity.Property(e => e.EventStartDate).HasColumnType("date");
             entity.Property(e => e.EventEndDate).HasColumnType("date");
             entity.HasIndex(e => new { e.EventStartDate, e.EventEndDate });
@@ -28,6 +28,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Booking>(entity =>
         {
+            entity.ToTable("Booking");
             entity.Property(b => b.BookingDate).HasDefaultValueSql("SYSUTCDATETIME()");
 
             // Restrict (the default): SQL Server refuses to delete a Venue/Event that
