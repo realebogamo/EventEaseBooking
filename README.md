@@ -46,9 +46,10 @@ lives in the POE report, summarised here so the code makes sense on its own:
 ## Getting started
 
 ```bash
-# from the repo root
+git clone https://github.com/realebogamo/EventEaseBooking.git
+cd EventEaseBooking   # repo root — EventEaseBooking.sln lives here; every command below assumes this cwd
+
 dotnet restore
-dotnet user-secrets init --project EventEaseBooking.Web
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=(localdb)\mssqllocaldb;Database=EventEaseBooking;Trusted_Connection=True;" --project EventEaseBooking.Web
 
 # create and apply the EF Core migration (generates Migrations/ from the models)
@@ -67,6 +68,13 @@ migrations.
 ships with an empty `ConnectionStrings:DefaultConnection` on purpose — use
 `dotnet user-secrets` locally and Azure App Service Application Settings in
 the cloud.
+
+**"The file '...\EventEaseBooking.Web' does not exist" when running a
+`dotnet user-secrets`/`dotnet ef` command:** `--project EventEaseBooking.Web`
+is a relative path — it's resolved against your current directory. This
+error means you're one level above the repo root (e.g. in the folder you
+cloned into, rather than inside `EventEaseBooking/`). `cd` into the repo
+root first (where `EventEaseBooking.sln` lives) and re-run the command.
 
 ### Azure SQL connection resiliency
 
