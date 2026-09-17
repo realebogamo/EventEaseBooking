@@ -202,8 +202,13 @@ public class BookingsController : Controller
 
     // This check-then-insert has a race window between two concurrent requests;
     // TR_Booking_PreventOverlap (see Database/Scripts/02_Part2_BusinessRules_And_Images.sql)
-    // is the real guarantee and raises this error text when it rolls a transaction back.
+    // is the real guarantee. Error 50000 is the trigger's own RAISERROR text.
+    // Error 334 ("OUTPUT clause without INTO on a table with enabled triggers")
+    // is caught too: Booking's only trigger is the overlap check, so if this
+    // table config (entity.ToTable(tb => tb.HasTrigger(...)) in
+    // ApplicationDbContext) is ever removed or a migration recreates the table
+    // without it, callers still see a friendly message instead of a raw 500.
     private static bool IsOverlapTriggerError(DbUpdateException ex)
         => ex.InnerException is SqlException sqlEx
-           && sqlEx.Message.Contains("overlapping booking", StringComparison.OrdinalIgnoreCase);
+           && (sqlEx.Number == 334 || sqlEx.Message.Contains("overlapping booking", StringComparison.OrdinalIgnoreCase));
 }
