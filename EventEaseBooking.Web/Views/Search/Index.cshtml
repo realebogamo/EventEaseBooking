@@ -1,0 +1,104 @@
+@model GlobalSearchViewModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h1>Search</h1>
+
+<form asp-action="Index" method="get" class="row g-2 mb-4">
+    <div class="col-md-6">
+        <input type="text" name="q" value="@Model.Search" class="form-control" placeholder="Search venues, events, bookings..." />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+@if (!Model.HasSearched)
+{
+    <p class="text-muted">Type a name, location, or description above to search across venues, events, and bookings.</p>
+}
+else if (Model.TotalResults == 0)
+{
+    <p class="text-muted">No venues, events, or bookings match "@Model.Search".</p>
+}
+else
+{
+    @if (Model.Venues.Any())
+    {
+        <h2 class="h4">Venues</h2>
+        <table class="table table-striped align-middle mb-4">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Capacity</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var venue in Model.Venues)
+            {
+                <tr>
+                    <td>@venue.VenueName</td>
+                    <td>@venue.Location</td>
+                    <td>@venue.Capacity</td>
+                    <td><a asp-controller="Venues" asp-action="Details" asp-route-id="@venue.VenueId" class="btn btn-sm btn-outline-secondary">Details</a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+
+    @if (Model.Events.Any())
+    {
+        <h2 class="h4">Events</h2>
+        <table class="table table-striped align-middle mb-4">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Dates</th>
+                    <th>Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var ev in Model.Events)
+            {
+                <tr>
+                    <td>@ev.EventName</td>
+                    <td>@ev.EventStartDate.ToString("d") - @ev.EventEndDate.ToString("d")</td>
+                    <td>@(ev.EventType?.TypeName ?? "—")</td>
+                    <td><a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="btn btn-sm btn-outline-secondary">Details</a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+
+    @if (Model.Bookings.Any())
+    {
+        <h2 class="h4">Bookings</h2>
+        <table class="table table-striped align-middle mb-4">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Venue</th>
+                    <th>Booked On</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var booking in Model.Bookings)
+            {
+                <tr>
+                    <td>@booking.Event?.EventName</td>
+                    <td>@booking.Venue?.VenueName</td>
+                    <td>@booking.BookingDate.ToString("g")</td>
+                    <td><a asp-controller="Bookings" asp-action="Details" asp-route-id="@booking.BookingId" class="btn btn-sm btn-outline-secondary">Details</a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+}
