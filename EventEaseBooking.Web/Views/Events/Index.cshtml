@@ -66,7 +66,25 @@
             <td>@evt.EventStartDate.ToString("d")</td>
             <td>@evt.EventEndDate.ToString("d")</td>
             <td>@(evt.EventType?.TypeName ?? "—")</td>
-            <td>@(evt.Bookings.Any() ? string.Join(", ", evt.Bookings.Select(b => b.Venue!.VenueName)) : "Needs a venue")</td>
+            <td>
+                @if (evt.Bookings.Any())
+                {
+                    @foreach (var booking in evt.Bookings)
+                    {
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            @if (!string.IsNullOrWhiteSpace(booking.Venue?.ImageUrl))
+                            {
+                                <img src="@booking.Venue.ImageUrl" alt="@booking.Venue.VenueName" class="img-thumbnail" style="max-width:40px" />
+                            }
+                            <span>@booking.Venue?.VenueName</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <span class="text-muted">Needs a venue</span>
+                }
+            </td>
             <td>
                 <a asp-action="Details" asp-route-id="@evt.EventId" class="btn btn-sm btn-outline-secondary">Details</a>
                 <a asp-action="Edit" asp-route-id="@evt.EventId" class="btn btn-sm btn-outline-primary">Edit</a>

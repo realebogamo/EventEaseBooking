@@ -26,5 +26,28 @@
     </div>
 </div>
 
+@if (Model.Bookings.Any())
+{
+    <h2 class="h5">Booked Venue@(Model.Bookings.Count > 1 ? "s" : "")</h2>
+    <div class="row mb-3">
+    @foreach (var booking in Model.Bookings)
+    {
+        <div class="col-md-3 text-center mb-3">
+            @if (!string.IsNullOrWhiteSpace(booking.Venue?.ImageUrl))
+            {
+                <img src="@booking.Venue.ImageUrl" alt="@booking.Venue.VenueName" class="img-thumbnail mb-1" />
+            }
+            <div>
+                <a asp-controller="Venues" asp-action="Details" asp-route-id="@booking.VenueId">@booking.Venue?.VenueName</a>
+            </div>
+        </div>
+    }
+    </div>
+}
+else
+{
+    <p class="text-muted">This event does not have a venue booked yet.</p>
+}
+
 <a asp-action="Edit" asp-route-id="@Model.EventId" class="btn btn-primary">Edit</a>
 <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>

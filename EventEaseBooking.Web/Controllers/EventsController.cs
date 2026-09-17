@@ -60,7 +60,11 @@ public class EventsController : Controller
     public async Task<IActionResult> Details(int? id)
     {
         if (id is null) return NotFound();
-        var @event = await _context.Events.AsNoTracking().Include(e => e.EventType).FirstOrDefaultAsync(e => e.EventId == id);
+        var @event = await _context.Events
+            .AsNoTracking()
+            .Include(e => e.EventType)
+            .Include(e => e.Bookings).ThenInclude(b => b.Venue)
+            .FirstOrDefaultAsync(e => e.EventId == id);
         return @event is null ? NotFound() : View(@event);
     }
 
